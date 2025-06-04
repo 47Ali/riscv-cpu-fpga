@@ -6,7 +6,7 @@ module execute_tb;
     reg clk, we, alu_src;
     reg [1:0] alu_op;
     reg [4:0] rs1, rs2, rd;
-    reg [31:0] imm;
+    reg [31:0] instr;
     reg [2:0] funct3;
     reg funct7_5;
 
@@ -22,7 +22,7 @@ module execute_tb;
         .rs1(rs1),
         .rs2(rs2),
         .rd(rd),
-        .imm(imm),
+        .instr(instr),
         .alu_src(alu_src),
         .funct3(funct3),
         .funct7_5(funct7_5),
@@ -49,7 +49,7 @@ module execute_tb;
         alu_src = 0;           // ALU source = register
         funct3 = 3'b000;       // ADD
         funct7_5 = 0;
-        imm = 0;               // Not used for ADD
+        instr = 32'h002082b3;  // add x5, x1, x2
 
         // Initialise x1 = 10 and x2 = 15
         uut.rf.regs[1] = 32'd10;

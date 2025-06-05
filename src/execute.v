@@ -3,7 +3,7 @@ module execute (
     input wire we,                     // Write enable for register file
     input wire [1:0] alu_op,          // ALUOp from control unit
     input wire [4:0] rs1, rs2, rd,    // Register addresses
-    input wire [31:0] imm,            // Immediate value
+    input wire [31:0] instr,          // Full instruction for immediate generation
     input wire alu_src,               // Select between register or immediate
     input wire [2:0] funct3,
     input wire funct7_5,
@@ -14,6 +14,7 @@ module execute (
 
     wire [31:0] op2;
     wire [3:0] alu_control;
+    wire [31:0] imm;
 
     // Register file
     regfile rf (
@@ -33,6 +34,12 @@ module execute (
         .funct3(funct3),
         .funct7_5(funct7_5),
         .alu_control(alu_control)
+    );
+
+    // Immediate generator
+    imm_gen imm_generator (
+        .instr(instr),
+        .imm_out(imm)
     );
 
     // ALU second operand selection

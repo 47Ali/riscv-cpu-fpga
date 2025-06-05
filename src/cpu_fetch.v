@@ -1,6 +1,15 @@
 module cpu_fetch (
-    input wire clk,
-    input wire reset,
+    input  wire        clk,
+    input  wire        reset,
+
+    // Control signals / targets
+    input  wire        jal,            // jal instruction
+    input  wire        jalr,           // jalr instruction
+    input  wire        branch,         // conditional branch instruction
+    input  wire        branch_taken,   // result of branch comparison from ALU
+    input  wire [31:0] branch_target,  // PC-relative target for jal/branch
+    input  wire [31:0] jalr_target,    // Target address for jalr
+
     output wire [31:0] instr,
     output wire [31:0] pc_out
 );
@@ -20,7 +29,12 @@ module cpu_fetch (
         .instr(instr)
     );
 
-    // PC always increments by 4 (for now, no branches)
-    assign next_pc = pc_out + 4;
+    // Next PC generation with branch/jump handling
+    wire [31:0] pc_plus4 = pc_out + 4;
+
+    assign next_pc = jal  ? branch_target :
+                     jalr ? jalr_target  :
+                     (branch && branch_taken) ? branch_target :
+                     pc_plus4;
 
 endmodule

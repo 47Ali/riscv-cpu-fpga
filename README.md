@@ -1,6 +1,6 @@
 # RISC-V CPU (RV32I) – Master's Dissertation Project
 
-This repository contains my custom 32-bit RISC-V CPU implementation in Verilog as part of my master's dissertation at King's College London. The CPU is built from scratch and verified using simulation tools (Icarus Verilog & GTKWave), with eventual deployment to a Basys3 FPGA board.
+This repository contains my custom 32-bit RISC-V CPU implementation in Verilog as part of my master's dissertation at King's College London. The CPU is built from scratch and verified using simulation tools (Icarus Verilog & Surfer), with eventual deployment to a Basys3 FPGA board.
 
 ---
 
@@ -37,7 +37,7 @@ riscv_cpu/
 
 * **VS Code** – Code editor
 * **Icarus Verilog** – For simulation
-* **GTKWave** – For waveform analysis
+* **Surfer** – For waveform analysis
 * **Vivado** – For synthesis to Basys3 (coming later)
 
 ---

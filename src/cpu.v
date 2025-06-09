@@ -8,6 +8,12 @@ module cpu(
     cpu_fetch fetch_unit(
         .clk(clk),
         .reset(reset),
+        .jal(1'b0),
+        .jalr(1'b0),
+        .branch(1'b0),
+        .branch_taken(1'b0),
+        .branch_target(32'b0),
+        .jalr_target(32'b0),
         .instr(instr),
         .pc_out(pc_out)
     );
@@ -50,7 +56,7 @@ module cpu(
         .rs1(rs1),
         .rs2(rs2),
         .rd(rd),
-        .imm(imm_i),
+        .instr(instr),
         .alu_src(ALUSrc),
         .funct3(funct3),
         .funct7_5(funct7[5]),

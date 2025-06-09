@@ -12,10 +12,10 @@ This repository contains my custom 32-bit RISC-V CPU implementation in Verilog a
 * [x] ALU
 * [x] ALU Control Unit
 * [x] `add` instruction execution tested via simulation
-* [ ] `addi` instruction
-* [ ] Control Unit
-* [ ] Load/Store (`lw`, `sw`)
-* [ ] Branch instructions
+* [x] `addi` instruction
+* [x] Control Unit
+* [x] Load/Store (`lw`, `sw`)
+* [x] Branch instructions
 * [ ] Pipeline (optional)
 
 ---

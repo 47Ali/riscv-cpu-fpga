@@ -42,6 +42,25 @@ riscv_cpu/
 
 ---
 
+## 🚀 Running Tests
+
+All module and integration tests are executed using `sim/run.sh`. Ensure
+that **Icarus Verilog** and **Surfer** are installed and available in your
+`PATH` before running the scripts.
+
+```bash
+# Test the program counter
+bash sim/run.sh pc_tb
+
+# Test the instruction memory
+bash sim/run.sh instr_mem_tb
+
+# Full CPU integration test
+bash sim/run.sh cpu_integration_tb
+```
+
+---
+
 ## 🧠 Example Instruction Tested
 
 ```

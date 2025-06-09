@@ -7,6 +7,7 @@ module execute (
     input wire alu_src,               // Select between register or immediate
     input wire [2:0] funct3,
     input wire funct7_5,
+    input wire [31:0] wb_data,        // Data to write back to register file
     output wire [31:0] alu_result,
     output wire zero,
     output wire [31:0] rd1, rd2
@@ -23,7 +24,7 @@ module execute (
         .rs1(rs1),
         .rs2(rs2),
         .rd(rd),
-        .wd(alu_result),
+        .wd(wb_data),
         .rd1(rd1),
         .rd2(rd2)
     );

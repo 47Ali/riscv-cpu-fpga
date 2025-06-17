@@ -1,6 +1,7 @@
 module cpu(
     input wire clk,
-    input wire reset
+    input wire reset,
+    output reg [31:0] cycle_count
 );
     wire [31:0] instr;
     wire [31:0] pc_out;
@@ -27,6 +28,9 @@ module cpu(
     wire [6:0] opcode = instr[6:0];
     wire [2:0] funct3 = instr[14:12];
     wire [6:0] funct7 = instr[31:25];
+
+    // Halt detection (using the EBREAK instruction)
+    wire halt = (instr == 32'h0010_0073);
     wire [4:0] rd  = instr[11:7];
     wire [4:0] rs1 = instr[19:15];
     wire [4:0] rs2 = instr[24:20];
@@ -109,6 +113,14 @@ module cpu(
     assign write_back_data = jal | jalr ? pc_plus4 :
                               MemRead    ? mem_data  :
                               alu_result;
+
+    // Cycle counter for benchmarking
+    always @(posedge clk) begin
+        if (reset)
+            cycle_count <= 0;
+        else if (!halt)
+            cycle_count <= cycle_count + 1;
+    end
 
     // TODO: Additional features could be added here
 endmodule

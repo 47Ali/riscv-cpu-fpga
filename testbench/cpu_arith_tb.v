@@ -37,6 +37,7 @@ module cpu_arith_tb;
 
         // ---- Instruction 1: addi x1, x0, 5 ----
         @(posedge clk);
+        #1; // allow PC/register updates to settle
         test_count = test_count + 1;
         if (uut.exec_unit.rf.regs[1] === 32'd5) begin
             $display("✓ PASS: x1 == 5");
@@ -57,6 +58,7 @@ module cpu_arith_tb;
 
         // ---- Instruction 2: addi x2, x0, 3 ----
         @(posedge clk);
+        #1;
         test_count = test_count + 1;
         if (uut.exec_unit.rf.regs[2] === 32'd3) begin
             $display("✓ PASS: x2 == 3");
@@ -77,6 +79,7 @@ module cpu_arith_tb;
 
         // ---- Instruction 3: add x3, x1, x2 ----
         @(posedge clk);
+        #1;
         test_count = test_count + 1;
         if (uut.exec_unit.rf.regs[3] === 32'd8) begin
             $display("✓ PASS: x3 == 8");
@@ -97,6 +100,7 @@ module cpu_arith_tb;
 
         // ---- Instruction 4: sub x4, x3, x1 ----
         @(posedge clk);
+        #1;
         test_count = test_count + 1;
         if (uut.exec_unit.rf.regs[4] === 32'd3) begin
             $display("✓ PASS: x4 == 3");
@@ -117,6 +121,7 @@ module cpu_arith_tb;
 
         // ---- Instruction 5: slt x5, x1, x2 ----
         @(posedge clk);
+        #1;
         test_count = test_count + 1;
         if (uut.exec_unit.rf.regs[5] === 32'd0) begin
             $display("✓ PASS: x5 == 0");
@@ -137,6 +142,7 @@ module cpu_arith_tb;
 
         // ---- Instruction 6: slt x6, x2, x1 ----
         @(posedge clk);
+        #1;
         test_count = test_count + 1;
         if (uut.exec_unit.rf.regs[6] === 32'd1) begin
             $display("✓ PASS: x6 == 1");

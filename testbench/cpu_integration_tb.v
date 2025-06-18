@@ -1,191 +1,180 @@
 `timescale 1ns / 1ps
 
-module cpu_integration_tb;
-    reg clk, reset;
-    integer test_count, pass_count, fail_count;
+module cpu_arith_tb;
+    // Clock, reset
+    reg clk = 0;
+    reg reset;
+
+    // Counters for test reporting
+    integer test_count = 0;
+    integer pass_count = 0;
+    integer fail_count = 0;
+
+    // Wire out the cycle counter from your CPU
     wire [31:0] cycle_count;
 
-    // Instantiate the CPU
+    // Instantiate your CPU
     cpu uut (
         .clk(clk),
         .reset(reset),
         .cycle_count(cycle_count)
     );
 
-    // Clock generation
+    // Generate a 10 ns clock period
+    always #5 clk = ~clk;
+
     initial begin
-        clk = 0;
-        forever #5 clk = ~clk;
-    end
+        // VCD dump for waveform viewing
+        $dumpfile("sim/cpu_arith_tb.vcd");
+        $dumpvars(0, cpu_arith_tb);
 
-    // Test sequence
-    initial begin
-        $dumpfile("sim/cpu_integration.vcd");
-        $dumpvars(0, cpu_integration_tb);
+        $display("=== RISC-V CPU Arithmetic Instruction Test ===");
 
-        test_count = 0;
-        pass_count = 0;
-        fail_count = 0;
-
-        $display("=== RISC-V CPU Integration Test ===");
-        $display("Testing complete CPU with program.mem");
-
-        // Reset phase
+        // 1) Apply reset for two clock edges
         reset = 1;
-        $display("Phase 1: Reset (PC should be 0x00000000)");
         @(posedge clk);
         @(posedge clk);
-
-        // Check initial state
-        test_count = test_count + 1;
-        if (uut.pc_out == 32'h00000000) begin
-            $display("✓ PASS: PC reset to 0x00000000");
-            pass_count = pass_count + 1;
-        end else begin
-            $display("✗ FAIL: PC = 0x%h, expected 0x00000000", uut.pc_out);
-            fail_count = fail_count + 1;
-        end
-
-        // Start execution
         reset = 0;
-        $display("\nPhase 2: Instruction Execution");
 
-        // Wait for first instruction to be fetched
+        // 2) First instruction: addi x1, x0, 5
         @(posedge clk);
-        $display("Instruction 1: 0x%h (NOP - addi x0, x0, 0)", uut.instr);
-
-        // Execute first instruction (NOP)
+        $display("Instruction 1 fetched: 0x%h (addi x1, x0, 5)", uut.instr);
         @(posedge clk);
         test_count = test_count + 1;
-        if (uut.pc_out == 32'h00000004) begin
-            $display("✓ PASS: PC incremented to 0x00000004");
+        if (uut.exec_unit.rf.regs[1] === 32'd5) begin
+            $display("✓ PASS: x1 = %0d", uut.exec_unit.rf.regs[1]);
             pass_count = pass_count + 1;
         end else begin
-            $display("✗ FAIL: PC = 0x%h, expected 0x00000004", uut.pc_out);
+            $display("✗ FAIL: x1 = %0d, expected 5", uut.exec_unit.rf.regs[1]);
+            fail_count = fail_count + 1;
+        end
+        test_count = test_count + 1;
+        if (uut.pc_out === 32'd4) begin
+            $display("✓ PASS: PC = 0x%h", uut.pc_out);
+            pass_count = pass_count + 1;
+        end else begin
+            $display("✗ FAIL: PC = 0x%h, expected 0x4", uut.pc_out);
             fail_count = fail_count + 1;
         end
 
-        // Wait for second instruction
+        // 3) Second instruction: addi x2, x0, 3
         @(posedge clk);
-        $display("Instruction 2: 0x%h (addi x1, x0, 1)", uut.instr);
-
-        // Execute second instruction (addi x1, x0, 1)
+        $display("Instruction 2 fetched: 0x%h (addi x2, x0, 3)", uut.instr);
         @(posedge clk);
         test_count = test_count + 1;
-        if (uut.pc_out == 32'h00000008) begin
-            $display("✓ PASS: PC incremented to 0x00000008");
+        if (uut.exec_unit.rf.regs[2] === 32'd3) begin
+            $display("✓ PASS: x2 = %0d", uut.exec_unit.rf.regs[2]);
             pass_count = pass_count + 1;
         end else begin
-            $display("✗ FAIL: PC = 0x%h, expected 0x00000008", uut.pc_out);
+            $display("✗ FAIL: x2 = %0d, expected 3", uut.exec_unit.rf.regs[2]);
+            fail_count = fail_count + 1;
+        end
+        test_count = test_count + 1;
+        if (uut.pc_out === 32'd8) begin
+            $display("✓ PASS: PC = 0x%h", uut.pc_out);
+            pass_count = pass_count + 1;
+        end else begin
+            $display("✗ FAIL: PC = 0x%h, expected 0x8", uut.pc_out);
             fail_count = fail_count + 1;
         end
 
-        // Check if x1 was written (need to wait for register write)
+        // 4) Third instruction: add x3, x1, x2  (5 + 3 = 8)
+        @(posedge clk);
+        $display("Instruction 3 fetched: 0x%h (add x3, x1, x2)", uut.instr);
         @(posedge clk);
         test_count = test_count + 1;
-        if (uut.exec_unit.rf.regs[1] == 32'd1) begin
-            $display("✓ PASS: x1 = %d (expected 1)", uut.exec_unit.rf.regs[1]);
+        if (uut.exec_unit.rf.regs[3] === 32'd8) begin
+            $display("✓ PASS: x3 = %0d", uut.exec_unit.rf.regs[3]);
             pass_count = pass_count + 1;
         end else begin
-            $display("✗ FAIL: x1 = %d, expected 1", uut.exec_unit.rf.regs[1]);
+            $display("✗ FAIL: x3 = %0d, expected 8", uut.exec_unit.rf.regs[3]);
+            fail_count = fail_count + 1;
+        end
+        test_count = test_count + 1;
+        if (uut.pc_out === 32'd12) begin
+            $display("✓ PASS: PC = 0x%h", uut.pc_out);
+            pass_count = pass_count + 1;
+        end else begin
+            $display("✗ FAIL: PC = 0x%h, expected 0xc", uut.pc_out);
             fail_count = fail_count + 1;
         end
 
-        // Wait for third instruction
+        // 5) Fourth instruction: sub x4, x3, x1  (8 - 5 = 3)
         @(posedge clk);
-        $display("Instruction 3: 0x%h (addi x2, x1, 2)", uut.instr);
-
-        // Execute third instruction (addi x2, x1, 2)
+        $display("Instruction 4 fetched: 0x%h (sub x4, x3, x1)", uut.instr);
         @(posedge clk);
         test_count = test_count + 1;
-        if (uut.pc_out == 32'h0000000c) begin
-            $display("✓ PASS: PC incremented to 0x0000000c");
+        if (uut.exec_unit.rf.regs[4] === 32'd3) begin
+            $display("✓ PASS: x4 = %0d", uut.exec_unit.rf.regs[4]);
             pass_count = pass_count + 1;
         end else begin
-            $display("✗ FAIL: PC = 0x%h, expected 0x0000000c", uut.pc_out);
+            $display("✗ FAIL: x4 = %0d, expected 3", uut.exec_unit.rf.regs[4]);
+            fail_count = fail_count + 1;
+        end
+        test_count = test_count + 1;
+        if (uut.pc_out === 32'd16) begin
+            $display("✓ PASS: PC = 0x%h", uut.pc_out);
+            pass_count = pass_count + 1;
+        end else begin
+            $display("✗ FAIL: PC = 0x%h, expected 0x10", uut.pc_out);
             fail_count = fail_count + 1;
         end
 
-        // Check if x2 was written correctly
+        // 6) Fifth instruction: slt x5, x1, x2  (5<3?=0)
+        @(posedge clk);
+        $display("Instruction 5 fetched: 0x%h (slt x5, x1, x2)", uut.instr);
         @(posedge clk);
         test_count = test_count + 1;
-        if (uut.exec_unit.rf.regs[2] == 32'd3) begin
-            $display("✓ PASS: x2 = %d (expected 3)", uut.exec_unit.rf.regs[2]);
+        if (uut.exec_unit.rf.regs[5] === 32'd0) begin
+            $display("✓ PASS: x5 = %0d", uut.exec_unit.rf.regs[5]);
             pass_count = pass_count + 1;
         end else begin
-            $display("✗ FAIL: x2 = %d, expected 3", uut.exec_unit.rf.regs[2]);
+            $display("✗ FAIL: x5 = %0d, expected 0", uut.exec_unit.rf.regs[5]);
+            fail_count = fail_count + 1;
+        end
+        test_count = test_count + 1;
+        if (uut.pc_out === 32'd20) begin
+            $display("✓ PASS: PC = 0x%h", uut.pc_out);
+            pass_count = pass_count + 1;
+        end else begin
+            $display("✗ FAIL: PC = 0x%h, expected 0x14", uut.pc_out);
             fail_count = fail_count + 1;
         end
 
-        // Wait for fourth instruction
+        // 7) Sixth instruction: slt x6, x2, x1  (3<5?=1)
         @(posedge clk);
-        $display("Instruction 4: 0x%h (addi x3, x2, 3)", uut.instr);
-
-        // Execute fourth instruction (addi x3, x2, 3)
+        $display("Instruction 6 fetched: 0x%h (slt x6, x2, x1)", uut.instr);
         @(posedge clk);
         test_count = test_count + 1;
-        if (uut.pc_out == 32'h00000010) begin
-            $display("✓ PASS: PC incremented to 0x00000010");
+        if (uut.exec_unit.rf.regs[6] === 32'd1) begin
+            $display("✓ PASS: x6 = %0d", uut.exec_unit.rf.regs[6]);
             pass_count = pass_count + 1;
         end else begin
-            $display("✗ FAIL: PC = 0x%h, expected 0x00000010", uut.pc_out);
+            $display("✗ FAIL: x6 = %0d, expected 1", uut.exec_unit.rf.regs[6]);
+            fail_count = fail_count + 1;
+        end
+        test_count = test_count + 1;
+        if (uut.pc_out === 32'd24) begin
+            $display("✓ PASS: PC = 0x%h", uut.pc_out);
+            pass_count = pass_count + 1;
+        end else begin
+            $display("✗ FAIL: PC = 0x%h, expected 0x18", uut.pc_out);
             fail_count = fail_count + 1;
         end
 
-        // Check if x3 was written correctly
+        // 8) Seventh instruction: ebreak → halt
         @(posedge clk);
-        test_count = test_count + 1;
-        if (uut.exec_unit.rf.regs[3] == 32'd6) begin
-            $display("✓ PASS: x3 = %d (expected 6)", uut.exec_unit.rf.regs[3]);
-            pass_count = pass_count + 1;
-        end else begin
-            $display("✗ FAIL: x3 = %d, expected 6", uut.exec_unit.rf.regs[3]);
-            fail_count = fail_count + 1;
-        end
+        $display("Instruction 7 fetched: 0x%h (ebreak)", uut.instr);
+        $display("✅ EBREAK: halting simulation");
 
-        // Wait for fifth instruction (JAL)
-        @(posedge clk);
-        $display("Instruction 5: 0x%h (jal x0, 0 - infinite loop)", uut.instr);
-
-        // Execute JAL instruction
-        @(posedge clk);
-
-        // Display final register state
-        $display("\n=== Final Register State ===");
-        $display("x0 = %d (should always be 0)", uut.exec_unit.rf.regs[0]);
-        $display("x1 = %d (should be 1)", uut.exec_unit.rf.regs[1]);
-        $display("x2 = %d (should be 3)", uut.exec_unit.rf.regs[2]);
-        $display("x3 = %d (should be 6)", uut.exec_unit.rf.regs[3]);
-
-        // Display control signals for last instruction
-        $display("\n=== Control Signals (Last Instruction) ===");
-        $display("ALUOp = %b", uut.ALUOp);
-        $display("RegWrite = %b", uut.RegWrite);
-        $display("ALUSrc = %b", uut.ALUSrc);
-        $display("Branch = %b", uut.Branch);
-        $display("Jump = %b", uut.Jump);
-
-        // Display ALU results
-        $display("\n=== ALU Results (Last Instruction) ===");
-        $display("ALU Result = %d (0x%h)", uut.alu_result, uut.alu_result);
-        $display("Zero Flag = %b", uut.zero);
-
-        // Test summary
+        // Final report
         $display("\n=== Test Summary ===");
-        $display("Total Tests: %d", test_count);
-        $display("Passed: %d", pass_count);
-        $display("Failed: %d", fail_count);
-        $display("Success Rate: %.1f%%", (pass_count * 100.0) / test_count);
-
-        if (fail_count == 0) begin
-            $display("🎉 ALL TESTS PASSED! CPU is working correctly.");
-        end else begin
-            $display("❌ Some tests failed. Check the implementation.");
-        end
-
-        $display("Total cycles executed: %d", cycle_count);
+        $display("Total Checks : %0d", test_count);
+        $display("Passed       : %0d", pass_count);
+        $display("Failed       : %0d", fail_count);
+        $display("Success Rate : %0.1f%%", (pass_count * 100.0) / test_count);
+        $display("Total Cycles : %0d", cycle_count);
 
         $finish;
     end
-
 endmodule

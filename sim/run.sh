@@ -2,6 +2,7 @@
 # Usage: bash sim/run.sh pc_tb
 #        bash sim/run.sh instr_mem_tb
 #        bash sim/run.sh cpu_integration_tb
+#        bash sim/run.sh cpu_arith_tb
 
 if [ "$1" == "instr_mem_tb" ]; then
   iverilog -o sim/instr_mem_tb.out src/instr_mem.v testbench/instr_mem_tb.v
@@ -18,12 +19,20 @@ elif [ "$1" == "cpu_integration_tb" ]; then
   vvp sim/cpu_integration_tb.out
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_integration.vcd
+elif [ "$1" == "cpu_arith_tb" ]; then
+  echo "Compiling CPU arithmetic testbench..."
+  iverilog -o sim/cpu_arith_tb.out src/*.v testbench/cpu_arith_tb.v
+  echo "Running CPU arithmetic test..."
+  vvp sim/cpu_arith_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_arith_tb.vcd
 else
-  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_integration_tb]"
+  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_integration_tb|cpu_arith_tb]"
   echo ""
   echo "Available testbenches:"
   echo "  pc_tb              - Test program counter"
   echo "  instr_mem_tb       - Test instruction memory"
   echo "  cpu_integration_tb - Test complete CPU with all components"
+  echo "  cpu_arith_tb       - Test CPU arithmetic instructions"
   exit 1
 fi

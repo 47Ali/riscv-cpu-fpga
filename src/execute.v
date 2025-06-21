@@ -1,5 +1,6 @@
 module execute (
     input wire clk,
+    input wire reset,
     input wire we,                     // Write enable for register file
     input wire [1:0] alu_op,          // ALUOp from control unit
     input wire [4:0] rs1, rs2, rd,    // Register addresses
@@ -20,6 +21,7 @@ module execute (
     // Register file
     regfile rf (
         .clk(clk),
+        .reset(reset),
         .we(we),
         .rs1(rs1),
         .rs2(rs2),

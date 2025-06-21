@@ -3,7 +3,7 @@
 module execute_tb;
 
     // Inputs to the execute module
-    reg clk, we, alu_src;
+    reg clk, reset, we, alu_src;
     reg [1:0] alu_op;
     reg [4:0] rs1, rs2, rd;
     reg [31:0] instr;
@@ -17,6 +17,7 @@ module execute_tb;
     // Instantiate the execution stage
     execute uut (
         .clk(clk),
+        .reset(reset),
         .we(we),
         .alu_op(alu_op),
         .rs1(rs1),
@@ -44,6 +45,7 @@ module execute_tb;
         $dumpvars(0, execute_tb);
 
         // Initial control setup
+        reset = 1;
         we = 1;
         alu_op = 2'b10;        // R-type
         alu_src = 0;           // ALU source = register
@@ -54,6 +56,10 @@ module execute_tb;
         // Initialise x1 = 10 and x2 = 15
         uut.rf.regs[1] = 32'd10;
         uut.rf.regs[2] = 32'd15;
+
+        // Release reset after one cycle
+        @(posedge clk);
+        reset = 0;
 
         #5;
         rs1 = 5'd1;

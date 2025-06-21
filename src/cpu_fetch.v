@@ -1,4 +1,6 @@
-module cpu_fetch (
+module cpu_fetch #(
+    parameter MEMFILE = "program.mem"
+) (
     input  wire        clk,
     input  wire        reset,
 
@@ -24,7 +26,7 @@ module cpu_fetch (
     );
 
     // Instruction Memory instance
-    instr_mem imem (
+    instr_mem #(.INIT_FILE(MEMFILE)) imem (
         .addr(pc_out),
         .instr(instr)
     );

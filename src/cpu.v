@@ -1,4 +1,6 @@
-module cpu(
+module cpu #(
+    parameter MEMFILE = "program.mem"
+) (
     input wire clk,
     input wire reset,
     output reg [31:0] cycle_count
@@ -11,7 +13,7 @@ module cpu(
     wire branch_taken;
     wire [31:0] branch_target, jalr_target;
 
-    cpu_fetch fetch_unit(
+    cpu_fetch #(.MEMFILE(MEMFILE)) fetch_unit(
         .clk(clk),
         .reset(reset),
         .jal(jal),

@@ -26,13 +26,53 @@ elif [ "$1" == "cpu_arith_tb" ]; then
   vvp sim/cpu_arith_tb.out
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_arith_tb.vcd
+elif [ "$1" == "cpu_reg_rw_tb" ]; then
+  echo "Compiling CPU register read/write testbench..."
+  iverilog -o sim/cpu_reg_rw_tb.out src/*.v testbench/cpu_reg_rw_tb.v
+  echo "Running CPU register read/write test..."
+  vvp sim/cpu_reg_rw_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_reg_rw_tb.vcd
+elif [ "$1" == "cpu_imm_bitwise_tb" ]; then
+  echo "Compiling CPU immediate & bitwise testbench..."
+  iverilog -o sim/cpu_imm_bitwise_tb.out src/*.v testbench/cpu_imm_bitwise_tb.v
+  echo "Running CPU immediate & bitwise test..."
+  vvp sim/cpu_imm_bitwise_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_imm_bitwise_tb.vcd
+elif [ "$1" == "cpu_mem_tb" ]; then
+  echo "Compiling CPU memory access testbench..."
+  iverilog -o sim/cpu_mem_tb.out src/*.v testbench/cpu_mem_tb.v
+  echo "Running CPU memory access test..."
+  vvp sim/cpu_mem_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_mem_tb.vcd
+elif [ "$1" == "cpu_branch_tb" ]; then
+  echo "Compiling CPU branching testbench..."
+  iverilog -o sim/cpu_branch_tb.out src/*.v testbench/cpu_branch_tb.v
+  echo "Running CPU branching test..."
+  vvp sim/cpu_branch_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_branch_tb.vcd
+elif [ "$1" == "cpu_jump_tb" ]; then
+  echo "Compiling CPU jump testbench..."
+  iverilog -o sim/cpu_jump_tb.out src/*.v testbench/cpu_jump_tb.v
+  echo "Running CPU jump test..."
+  vvp sim/cpu_jump_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_jump_tb.vcd
 else
-  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_integration_tb|cpu_arith_tb]"
+  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_integration_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb]"
   echo ""
   echo "Available testbenches:"
   echo "  pc_tb              - Test program counter"
   echo "  instr_mem_tb       - Test instruction memory"
   echo "  cpu_integration_tb - Test complete CPU with all components"
   echo "  cpu_arith_tb       - Test CPU arithmetic instructions"
+  echo "  cpu_reg_rw_tb      - Test register reads and writes"
+  echo "  cpu_imm_bitwise_tb - Test immediates and bitwise/shift ops"
+  echo "  cpu_mem_tb         - Test memory access"
+  echo "  cpu_branch_tb      - Test branching logic"
+  echo "  cpu_jump_tb        - Test jump instructions"
   exit 1
 fi

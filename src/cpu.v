@@ -104,8 +104,26 @@ module cpu #(
     assign branch_target = pc_out + imm;
     assign jalr_target   = (rd1 + imm) & 32'hffff_fffe;
 
-    // Branch decision (only BEQ implemented)
-    assign branch_taken = Branch && zero;
+    // Branch comparison helpers
+    wire eq      = (rd1 == rd2);
+    wire slt     = ($signed(rd1) < $signed(rd2));
+    wire sltu    = (rd1 < rd2);
+
+    // Branch decision based on funct3
+    reg branch_cond;
+    always @(*) begin
+        case (funct3)
+            3'b000: branch_cond = eq;          // BEQ
+            3'b001: branch_cond = !eq;         // BNE
+            3'b100: branch_cond = slt;         // BLT
+            3'b101: branch_cond = !slt;        // BGE
+            3'b110: branch_cond = sltu;        // BLTU
+            3'b111: branch_cond = !sltu;       // BGEU
+            default: branch_cond = 1'b0;
+        endcase
+    end
+
+    assign branch_taken = Branch && branch_cond;
 
     // Distinguish between JAL and JALR
     assign jal  = Jump && (opcode == 7'b1101111);

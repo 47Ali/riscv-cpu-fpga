@@ -61,8 +61,15 @@ elif [ "$1" == "cpu_jump_tb" ]; then
   vvp sim/cpu_jump_tb.out
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_jump_tb.vcd
+elif [ "$1" == "cpu_full_tb" ]; then
+  echo "Compiling full CPU testbench..."
+  iverilog -o sim/cpu_full_tb.out src/*.v testbench/cpu_full_tb.v
+  echo "Running full CPU test..."
+  vvp sim/cpu_full_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_full_tb.vcd
 else
-  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_integration_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb]"
+  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_integration_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb|cpu_full_tb]"
   echo ""
   echo "Available testbenches:"
   echo "  pc_tb              - Test program counter"
@@ -74,5 +81,6 @@ else
   echo "  cpu_mem_tb         - Test memory access"
   echo "  cpu_branch_tb      - Test branching logic"
   echo "  cpu_jump_tb        - Test jump instructions"
+  echo "  cpu_full_tb        - Run full CPU test suite"
   exit 1
 fi

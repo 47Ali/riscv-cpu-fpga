@@ -70,7 +70,8 @@ module cpu_branch_tb;
         // addi x6,9
         @(posedge clk); #1;
         test_count = test_count + 1;
-        if (uut.exec_unit.rf.regs[6] === 32'd9) begin
+        if (uut.exec_unit.rf.regs[6] === 32'd9 &&
+            uut.exec_unit.rf.regs[2] === 32'd2) begin
             $display("PASS: Branches behaved correctly");
             pass_count = pass_count + 1;
         end else begin

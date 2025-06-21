@@ -72,7 +72,7 @@ module cpu_full_tb;
         check(uut.exec_unit.rf.regs[X6] === 32'd9, "branch x6 == 9");
 
         // ----- Jump segment -----
-        repeat(7) @(posedge clk); #1;
+        repeat(6) @(posedge clk); #1;
         check(uut.exec_unit.rf.regs[X2] === 32'd5, "jal/jalr x2 == 5");
         check(uut.exec_unit.rf.regs[X3] === 32'd6, "jal/jalr x3 == 6");
 

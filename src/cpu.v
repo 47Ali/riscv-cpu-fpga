@@ -81,6 +81,7 @@ module cpu #(
 
     execute exec_unit(
         .clk(clk),
+        .reset(reset),
         .we(RegWrite),
         .alu_op(ALUOp),
         .rs1(rs1),

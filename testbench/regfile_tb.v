@@ -2,13 +2,14 @@
 
 module regfile_tb;
 
-    reg clk, we;
+    reg clk, reset, we;
     reg [4:0] rs1, rs2, rd;
     reg [31:0] wd;
     wire [31:0] rd1, rd2;
 
     regfile uut (
         .clk(clk),
+        .reset(reset),
         .we(we),
         .rs1(rs1),
         .rs2(rs2),
@@ -22,8 +23,11 @@ module regfile_tb;
         $dumpfile("sim/regfile.vcd");
         $dumpvars(0, regfile_tb);
 
-        clk = 0; we = 0;
+        clk = 0; reset = 1; we = 0;
         rs1 = 0; rs2 = 0; rd = 0; wd = 0;
+
+        #5  clk = 1; #5 clk = 0;        // Apply reset for one cycle
+        reset = 0;
 
         #5  rd = 5; wd = 32'hAAAA_BBBB; we = 1;
         #5  clk = 1; #5 clk = 0; we = 0;

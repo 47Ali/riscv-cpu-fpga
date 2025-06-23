@@ -1,7 +1,7 @@
 #!/bin/bash
 # Usage: bash sim/run.sh pc_tb
 #        bash sim/run.sh instr_mem_tb
-#        bash sim/run.sh cpu_integration_tb
+#        bash sim/run.sh cpu_full_tb
 #        bash sim/run.sh cpu_arith_tb
 
 if [ "$1" == "instr_mem_tb" ]; then
@@ -69,18 +69,17 @@ elif [ "$1" == "cpu_full_tb" ]; then
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_full_tb.vcd
 else
-  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_integration_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb|cpu_full_tb]"
+  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_full_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb]"
   echo ""
   echo "Available testbenches:"
   echo "  pc_tb              - Test program counter"
   echo "  instr_mem_tb       - Test instruction memory"
-  echo "  cpu_integration_tb - Test complete CPU with all components"
+  echo "  cpu_full_tb        - Run full CPU test suite"
   echo "  cpu_arith_tb       - Test CPU arithmetic instructions"
   echo "  cpu_reg_rw_tb      - Test register reads and writes"
   echo "  cpu_imm_bitwise_tb - Test immediates and bitwise/shift ops"
   echo "  cpu_mem_tb         - Test memory access"
   echo "  cpu_branch_tb      - Test branching logic"
   echo "  cpu_jump_tb        - Test jump instructions"
-  echo "  cpu_full_tb        - Run full CPU test suite"
   exit 1
 fi

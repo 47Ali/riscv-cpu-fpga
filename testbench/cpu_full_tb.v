@@ -26,6 +26,12 @@ module cpu_full_tb;
         .cycle_count(cycle_count)
     );
 
+    wire [31:0] instr_count      = uut.instr_count;
+    wire [31:0] mem_read_count   = uut.mem_read_count;
+    wire [31:0] mem_write_count  = uut.mem_write_count;
+    wire [31:0] rf_read_count    = uut.rf_read_count;
+    wire [31:0] rf_write_count   = uut.rf_write_count;
+
     // 10ns clock
     always #5 clk = ~clk;
 
@@ -90,6 +96,11 @@ module cpu_full_tb;
         $display("Passed       : %0d", pass_count);
         $display("Failed       : %0d", fail_count);
         $display("Cycles       : %0d", cycle_count);
+        $display("Instructions : %0d", instr_count);
+        $display("Mem reads    : %0d", mem_read_count);
+        $display("Mem writes   : %0d", mem_write_count);
+        $display("RF reads     : %0d", rf_read_count);
+        $display("RF writes    : %0d", rf_write_count);
         $finish;
     end
 endmodule

@@ -8,6 +8,13 @@ module cpu #(
     wire [31:0] instr;
     wire [31:0] pc_out;
 
+    // Performance counters
+    reg [31:0] instr_count;
+    reg [31:0] mem_read_count;
+    reg [31:0] mem_write_count;
+    reg [31:0] rf_read_count;
+    reg [31:0] rf_write_count;
+
     // Signals for fetch stage
     wire jal, jalr;
     wire branch_taken;
@@ -135,13 +142,36 @@ module cpu #(
                               MemRead    ? mem_data  :
                               alu_result;
 
-    // Cycle counter for benchmarking
+    // Cycle counter and other performance metrics
     always @(posedge clk) begin
-        if (reset)
-            cycle_count <= 0;
-        else if (!halt)
+        if (reset) begin
+            cycle_count     <= 0;
+            instr_count     <= 0;
+            mem_read_count  <= 0;
+            mem_write_count <= 0;
+            rf_read_count   <= 0;
+            rf_write_count  <= 0;
+        end else if (!halt) begin
             cycle_count <= cycle_count + 1;
+            instr_count <= instr_count + 1;
+
+            // Memory access counters
+            if (MemRead)
+                mem_read_count <= mem_read_count + 1;
+            if (MemWrite)
+                mem_write_count <= mem_write_count + 1;
+
+            // Register file read counters
+            if ((opcode != 7'b1101111) && (rs1 != 0))
+                rf_read_count <= rf_read_count + 1;
+            if ((opcode == 7'b0110011 || opcode == 7'b0100011 || opcode == 7'b1100011) && (rs2 != 0))
+                rf_read_count <= rf_read_count + 1;
+
+            // Register file write counter
+            if (RegWrite && rd != 0)
+                rf_write_count <= rf_write_count + 1;
+        end
     end
 
-    // TODO: Additional features could be added here
+    // TODO: Power estimation hooks can be added for FPGA implementation
 endmodule

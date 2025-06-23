@@ -56,8 +56,25 @@ bash sim/run.sh pc_tb
 bash sim/run.sh instr_mem_tb
 
 # Full CPU integration test
-bash sim/run.sh cpu_integration_tb
+bash sim/run.sh cpu_full_tb
 ```
+
+---
+
+## 📊 Benchmark Metrics
+
+The CPU tracks several performance counters during simulation:
+
+* **`cycle_count`** – total cycles executed
+* **`instr_count`** – number of instructions retired
+* **`mem_read_count`/`mem_write_count`** – load and store operations
+* **`rf_read_count`/`rf_write_count`** – register file reads and writes
+
+These values can be inspected from any testbench (e.g. `uut.instr_count`) to
+understand why a given program performs the way it does.
+
+Running `bash sim/run.sh cpu_full_tb` will print these counters when the
+program ends.
 
 ---
 

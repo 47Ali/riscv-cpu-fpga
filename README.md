@@ -57,6 +57,10 @@ Use `sim/run.sh` with one of the following targets:
 | `cpu_jump_tb`       | Jump instructions                    |
 | `cpu_integration_tb`| Full CPU with all components         |
 | `cpu_full_tb`       | Complete test suite                  |
+| `cpu_mul_tb`        | Test MUL instruction                 |
+| `cpu_relu_tb`       | ReLU benchmark                       |
+| `cpu_matmul_tb`     | 2x2 matrix multiplication benchmark  |
+| `cpu_dotprod_tb`    | Dot product benchmark                |
 
 Run any of the above using:
 
@@ -102,6 +106,16 @@ ebreak             # End of program
 ```
 
 This confirms that the CPU correctly executes instructions and updates register values as expected.
+
+## 🏁 ML Benchmarks
+
+The `test_mem` folder contains small programs for benchmarking basic ML operations. Run them with:
+
+```bash
+bash sim/run.sh cpu_relu_tb      # ReLU on a 4-element array
+bash sim/run.sh cpu_matmul_tb    # 2x2 matrix multiplication
+bash sim/run.sh cpu_dotprod_tb   # Dot product
+```
 
 ## 🔜 Next Steps
 

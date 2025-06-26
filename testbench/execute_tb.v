@@ -8,7 +8,7 @@ module execute_tb;
     reg [4:0] rs1, rs2, rd;
     reg [31:0] instr;
     reg [2:0] funct3;
-    reg funct7_5;
+    reg [6:0] funct7;
 
     // Outputs from the execute module
     wire [31:0] alu_result, rd1, rd2;
@@ -26,7 +26,7 @@ module execute_tb;
         .instr(instr),
         .alu_src(alu_src),
         .funct3(funct3),
-        .funct7_5(funct7_5),
+        .funct7(funct7),
         .alu_result(alu_result),
         .zero(zero),
         .rd1(rd1),
@@ -50,7 +50,7 @@ module execute_tb;
         alu_op = 2'b10;        // R-type
         alu_src = 0;           // ALU source = register
         funct3 = 3'b000;       // ADD
-        funct7_5 = 0;
+        funct7 = 7'b0000000;
         instr = 32'h002082b3;  // add x5, x1, x2
 
         // Initialise x1 = 10 and x2 = 15

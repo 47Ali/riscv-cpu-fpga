@@ -7,7 +7,7 @@ module execute (
     input wire [31:0] instr,          // Full instruction for immediate generation
     input wire alu_src,               // Select between register or immediate
     input wire [2:0] funct3,
-    input wire funct7_5,
+    input wire [6:0] funct7,
     input wire [31:0] wb_data,        // Data to write back to register file
     output wire [31:0] alu_result,
     output wire zero,
@@ -35,7 +35,7 @@ module execute (
     alu_control alu_ctl (
         .ALUOp(alu_op),
         .funct3(funct3),
-        .funct7_5(funct7_5),
+        .funct7(funct7),
         .alu_control(alu_control)
     );
 

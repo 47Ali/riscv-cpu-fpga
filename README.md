@@ -12,6 +12,7 @@ This repository hosts a custom 32‑bit RISC‑V CPU designed in Verilog. The pr
 - Immediate generation and branching
 - Data memory with load/store instructions
 - Comprehensive testbenches for each module and full CPU integration
+- New `mul` instruction using opcode `0x33` with `funct7=0x01`
 
 ---
 

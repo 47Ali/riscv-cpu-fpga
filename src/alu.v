@@ -19,6 +19,7 @@ module alu (
             4'b1101: result = $signed(a) >>> b[4:0];     // SRA
             4'b0111: result = ($signed(a) < $signed(b)) ? 1 : 0; // SLT
             4'b1000: result = (a < b) ? 1 : 0;           // SLTU
+            4'b1001: result = a * b;                     // MUL
             default: result = 0;
         endcase
     end

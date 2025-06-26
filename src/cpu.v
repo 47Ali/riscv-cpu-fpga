@@ -97,7 +97,7 @@ module cpu #(
         .instr(instr),
         .alu_src(ALUSrc),
         .funct3(funct3),
-        .funct7_5(funct7[5]),
+        .funct7(funct7),
         .wb_data(write_back_data),
         .alu_result(alu_result),
         .zero(zero),

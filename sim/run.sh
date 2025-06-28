@@ -68,6 +68,27 @@ elif [ "$1" == "cpu_mul_tb" ]; then
   vvp sim/cpu_mul_tb.out
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_mul_tb.vcd
+elif [ "$1" == "cpu_relu_tb" ]; then
+  echo "Compiling CPU ReLU benchmark..."
+  iverilog -o sim/cpu_relu_tb.out src/*.v testbench/cpu_relu_tb.v
+  echo "Running CPU ReLU benchmark..."
+  vvp sim/cpu_relu_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_relu_tb.vcd
+elif [ "$1" == "cpu_matmul_tb" ]; then
+  echo "Compiling CPU 2x2 matrix multiplication benchmark..."
+  iverilog -o sim/cpu_matmul_tb.out src/*.v testbench/cpu_matmul_tb.v
+  echo "Running CPU 2x2 matrix multiplication benchmark..."
+  vvp sim/cpu_matmul_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_matmul_tb.vcd
+elif [ "$1" == "cpu_dotprod_tb" ]; then
+  echo "Compiling CPU dot product benchmark..."
+  iverilog -o sim/cpu_dotprod_tb.out src/*.v testbench/cpu_dotprod_tb.v
+  echo "Running CPU dot product benchmark..."
+  vvp sim/cpu_dotprod_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_dotprod_tb.vcd
 elif [ "$1" == "cpu_full_tb" ]; then
   echo "Compiling full CPU testbench..."
   iverilog -o sim/cpu_full_tb.out src/*.v testbench/cpu_full_tb.v
@@ -76,7 +97,7 @@ elif [ "$1" == "cpu_full_tb" ]; then
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_full_tb.vcd
 else
-  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_full_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb|cpu_mul_tb]"
+  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_full_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb|cpu_mul_tb|cpu_relu_tb|cpu_matmul_tb|cpu_dotprod_tb]"
   echo ""
   echo "Available testbenches:"
   echo "  pc_tb              - Test program counter"
@@ -89,5 +110,8 @@ else
   echo "  cpu_branch_tb      - Test branching logic"
   echo "  cpu_jump_tb        - Test jump instructions"
   echo "  cpu_mul_tb         - Test MUL instruction"
+  echo "  cpu_relu_tb        - ReLU benchmark"
+  echo "  cpu_matmul_tb      - 2x2 matrix multiplication benchmark"
+  echo "  cpu_dotprod_tb     - Dot product benchmark"
   exit 1
 fi

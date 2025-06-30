@@ -20,18 +20,21 @@ This repository hosts a custom 32‑bit RISC‑V CPU designed in Verilog. The pr
 
 ```
 riscv-cpu/
-├── src/         # Verilog source files
-├── testbench/   # Testbenches for modules and CPU
-├── sim/         # Run scripts and waveform dumps
-├── program.mem  # Example instruction memory image
+├── base_cpu/   # RV32I CPU without ML instructions
+├── accel_cpu/  # Extended CPU with ReLU, Dot, and MatMul accelerators
 └── README.md
 ```
+
+## 🔀 Versions
+- [`base_cpu/`](./base_cpu): RV32I CPU without ML instructions
+- [`accel_cpu/`](./accel_cpu): Extended CPU with ReLU, Dot, and MatMul accelerators
+
 
 ---
 
 ## 💻 Usage
 
-All tests are executed via `sim/run.sh`. Ensure **Icarus Verilog** and **Surfer** are installed and accessible from your `PATH`.
+All tests are executed via the `sim/run.sh` script inside each CPU folder. Ensure **Icarus Verilog** and **Surfer** are installed and accessible from your `PATH`.
 
 ```bash
 # Run a simple program counter test

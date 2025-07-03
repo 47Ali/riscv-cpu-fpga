@@ -5,9 +5,11 @@
 #        bash sim/run.sh cpu_arith_tb
 
 # Ensure the script can be executed from any directory by
-# switching to the CPU root (one level above this script).
+# Ensure script runs from its parent directory so relative paths resolve
 SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
-cd "$SCRIPT_DIR/.."
+CPU_DIR="$(dirname "$SCRIPT_DIR")"
+cd "$CPU_DIR" || exit 1
+
 
 if [ "$1" == "instr_mem_tb" ]; then
   iverilog -o sim/instr_mem_tb.out src/instr_mem.v testbench/instr_mem_tb.v
@@ -94,6 +96,13 @@ elif [ "$1" == "cpu_dotprod_tb" ]; then
   vvp sim/cpu_dotprod_tb.out
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_dotprod_tb.vcd
+elif [ "$1" == "cpu_program_tb" ]; then
+  echo "Compiling CPU program.mem testbench..."
+  iverilog -o sim/cpu_program_tb.out src/*.v testbench/cpu_program_tb.v
+  echo "Running CPU program.mem test..."
+  vvp sim/cpu_program_tb.out
+  echo "Opening waveform in Surfer..."
+  surfer sim/cpu_program_tb.vcd
 elif [ "$1" == "cpu_full_tb" ]; then
   echo "Compiling full CPU testbench..."
   iverilog -o sim/cpu_full_tb.out src/*.v testbench/cpu_full_tb.v
@@ -102,7 +111,7 @@ elif [ "$1" == "cpu_full_tb" ]; then
   echo "Opening waveform in Surfer..."
   surfer sim/cpu_full_tb.vcd
 else
-  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_full_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb|cpu_mul_tb|cpu_relu_tb|cpu_matmul_tb|cpu_dotprod_tb]"
+  echo "Usage: bash sim/run.sh [pc_tb|instr_mem_tb|cpu_full_tb|cpu_arith_tb|cpu_reg_rw_tb|cpu_imm_bitwise_tb|cpu_mem_tb|cpu_branch_tb|cpu_jump_tb|cpu_mul_tb|cpu_relu_tb|cpu_matmul_tb|cpu_dotprod_tb|cpu_program_tb]"
   echo ""
   echo "Available testbenches:"
   echo "  pc_tb              - Test program counter"
@@ -118,5 +127,6 @@ else
   echo "  cpu_relu_tb        - ReLU benchmark"
   echo "  cpu_matmul_tb      - 2x2 matrix multiplication benchmark"
   echo "  cpu_dotprod_tb     - Dot product benchmark"
+  echo "  cpu_program_tb     - Run program.mem on base CPU (custom testbench)"
   exit 1
 fi

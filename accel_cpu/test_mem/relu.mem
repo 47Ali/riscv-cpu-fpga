@@ -12,10 +12,8 @@ fff00113 // addi x2, x0, -1
 00400393 // addi x7, x0, 4
 00508433 // add x8, x1, x5
 00042483 // lw x9, 0(x8)
-00904363 // blt x9, x0, set0
+0004848b // custom_relu x9, x9
 00942023 // sw x9, 0(x8)
-00000263 // beq x0, x0, next
-00042023 // sw x0, 0(x8)
 006282b3 // add x5, x5, x6
 fff38393 // addi x7, x7, -1
 fe7018e3 // bne x7, x0, loop

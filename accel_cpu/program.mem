@@ -10,7 +10,7 @@ fff00093 // addi x1, x0, -1
 00500393 // addi x7, x0, 5
 01039393 // slli x7, x7, 16
 00736333 // or x6, x6, x7
-0062a38b // custom_dot x7, x5, x6
+0062a40b // custom_dot x8, x5, x6
 00100413 // addi x8, x0, 1
 00200493 // addi x9, x0, 2
 01049493 // slli x9, x9, 16

@@ -127,7 +127,11 @@ bash sim/run.sh cpu_dotprod_tb   # Dot product
 3. Synthesize and deploy the design to an FPGA board.
 
 ## 🎛 Basys3 FPGA Example
+
 The `basys3` folder now includes a Vivado wrapper that slows the CPU clock so the board's LEDs and seven‑segment display update at a visible rate. `program.mem` contains a tiny loop that increments register `x5` from 0–9. The LEDs still show the high bits of the cycle counter, while the 7‑segment display shows the value of `x5`.
+=======
+The `basys3` folder contains a simple wrapper and constraint file for the Digilent Basys3 board. Add the RTL sources from `base_cpu/src/` together with `basys3/basys3_top.v` and `basys3/program.mem` to a new Vivado project. Apply the pin constraints from `basys3/basys3.xdc`, then synthesize and program the board. The board LEDs will display the lower 16 bits of the CPU's cycle counter.
+
 ---
 
 ## 💌 Author

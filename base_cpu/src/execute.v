@@ -11,7 +11,8 @@ module execute (
     input wire [31:0] wb_data,        // Data to write back to register file
     output wire [31:0] alu_result,
     output wire zero,
-    output wire [31:0] rd1, rd2
+    output wire [31:0] rd1, rd2,
+    output wire [31:0] reg5
 );
 
     wire [31:0] op2;
@@ -28,7 +29,8 @@ module execute (
         .rd(rd),
         .wd(wb_data),
         .rd1(rd1),
-        .rd2(rd2)
+        .rd2(rd2),
+        .x5(reg5)
     );
 
     // ALU control

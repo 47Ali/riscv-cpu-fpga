@@ -3,7 +3,8 @@ module cpu #(
 ) (
     input wire clk,
     input wire reset,
-    output reg [31:0] cycle_count
+    output reg [31:0] cycle_count,
+    output wire [31:0] reg5_val
 );
     wire [31:0] instr;
     wire [31:0] pc_out;
@@ -72,6 +73,7 @@ module cpu #(
     wire [31:0] alu_result;
     wire zero;
     wire [31:0] rd1, rd2;
+    wire [31:0] reg5;
     wire [31:0] write_back_data;
 
     // Data memory
@@ -102,7 +104,8 @@ module cpu #(
         .alu_result(alu_result),
         .zero(zero),
         .rd1(rd1),
-        .rd2(rd2)
+        .rd2(rd2),
+        .reg5(reg5)
     );
 
     // PC increment
@@ -172,6 +175,8 @@ module cpu #(
                 rf_write_count <= rf_write_count + 1;
         end
     end
+
+    assign reg5_val = reg5;
 
     // TODO: Power estimation hooks can be added for FPGA implementation
 endmodule

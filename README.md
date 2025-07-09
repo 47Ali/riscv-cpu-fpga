@@ -126,6 +126,8 @@ bash sim/run.sh cpu_dotprod_tb   # Dot product
 2. Benchmark the CPU using representative workloads.
 3. Synthesize and deploy the design to an FPGA board.
 
+## 🎛 Basys3 FPGA Example
+The `basys3` folder now includes a Vivado wrapper that slows the CPU clock so the board's LEDs and seven‑segment display update at a visible rate. `program.mem` contains a tiny loop that increments register `x5` from 0–9. The LEDs still show the high bits of the cycle counter, while the 7‑segment display shows the value of `x5`.
 ---
 
 ## 💌 Author
